@@ -1,4 +1,4 @@
-resource "aws_s3_bucket" "web-bucket" {
+resource "aws_s3_bucket" "web_bucket" {
   for_each = var.environments
 
   bucket = each.value.domain_name
@@ -7,12 +7,12 @@ resource "aws_s3_bucket" "web-bucket" {
     "policies/s3-bucket-policy.tpl",
     {
       bucket_name = each.value.domain_name,
-      origin_access_identity = aws_cloudfront_origin_access_identity.web-cloudfront-identity.id
+      origin_access_identity = aws_cloudfront_origin_access_identity.web_cloudfront_identity.id
     }
   )
 }
 
-resource "aws_s3_bucket" "www-web-bucket" {
+resource "aws_s3_bucket" "www_web_bucket" {
   for_each = var.environments
 
   bucket = "www.${each.value.domain_name}"
@@ -22,7 +22,7 @@ resource "aws_s3_bucket" "www-web-bucket" {
   }
 }
 
-resource "aws_s3_bucket" "logs-bucket" {
+resource "aws_s3_bucket" "logs_bucket" {
   bucket = "${var.project_name}-logs"
 
   policy = templatefile(

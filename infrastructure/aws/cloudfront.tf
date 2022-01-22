@@ -1,4 +1,4 @@
-resource "aws_cloudfront_distribution" "web-cloudfront" {
+resource "aws_cloudfront_distribution" "web_cloudfront" {
   for_each = var.environments
 
   enabled = true
@@ -10,15 +10,15 @@ resource "aws_cloudfront_distribution" "web-cloudfront" {
   is_ipv6_enabled = true
 
   origin {
-    origin_id = aws_s3_bucket.web-bucket[each.key].bucket_regional_domain_name
-    domain_name = aws_s3_bucket.web-bucket[each.key].bucket_regional_domain_name
+    origin_id = aws_s3_bucket.web_bucket[each.key].bucket_regional_domain_name
+    domain_name = aws_s3_bucket.web_bucket[each.key].bucket_regional_domain_name
     origin_path = ""
 
     connection_attempts = 3
     connection_timeout  = 10
 
     s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.web-cloudfront-identity.cloudfront_access_identity_path
+      origin_access_identity = aws_cloudfront_origin_access_identity.web_cloudfront_identity.cloudfront_access_identity_path
     }
   }
 
@@ -41,7 +41,7 @@ resource "aws_cloudfront_distribution" "web-cloudfront" {
 
     cache_policy_id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
 
-    target_origin_id = aws_s3_bucket.web-bucket[each.key].bucket_regional_domain_name
+    target_origin_id = aws_s3_bucket.web_bucket[each.key].bucket_regional_domain_name
     viewer_protocol_policy = "redirect-to-https"
     compress = true
   }
@@ -53,12 +53,12 @@ resource "aws_cloudfront_distribution" "web-cloudfront" {
   }
 
   logging_config {
-    bucket = aws_s3_bucket.logs-bucket.bucket_domain_name
+    bucket = aws_s3_bucket.logs_bucket.bucket_domain_name
     include_cookies = false
     prefix = "docs-${each.key}"
   }
 }
 
-resource "aws_cloudfront_origin_access_identity" "web-cloudfront-identity" {
+resource "aws_cloudfront_origin_access_identity" "web_cloudfront_identity" {
   comment = "access-identity-julleks.com.s3.eu-west-1.amazonaws.com"
 }

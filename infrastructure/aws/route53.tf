@@ -15,7 +15,7 @@ resource "aws_route53_record" "ns-record" {
   ttl = 172800
 }
 
-resource "aws_route53_record" "soa-record" {
+resource "aws_route53_record" "soa_record" {
   name = var.root_domain_name
   type = "SOA"
   zone_id = aws_route53_zone.primary.zone_id
@@ -25,7 +25,7 @@ resource "aws_route53_record" "soa-record" {
   ttl = 900
 }
 
-resource "aws_route53_record" "certificate-cname-record" {
+resource "aws_route53_record" "certificate_cname_record" {
   for_each = {
     for dvo in aws_acm_certificate.certificate.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
@@ -44,7 +44,7 @@ resource "aws_route53_record" "certificate-cname-record" {
   ttl = 60
 }
 
-resource "aws_route53_record" "web-a-record" {
+resource "aws_route53_record" "web_a_record" {
   for_each = var.environments
 
   name = each.value.domain_name
@@ -53,12 +53,12 @@ resource "aws_route53_record" "web-a-record" {
 
   alias {
     evaluate_target_health = false
-    name = aws_cloudfront_distribution.web-cloudfront[each.key].domain_name
-    zone_id = aws_cloudfront_distribution.web-cloudfront[each.key].hosted_zone_id
+    name = aws_cloudfront_distribution.web_cloudfront[each.key].domain_name
+    zone_id = aws_cloudfront_distribution.web_cloudfront[each.key].hosted_zone_id
   }
 }
 
-resource "aws_route53_record" "www-web-a-record" {
+resource "aws_route53_record" "www_web_a_record" {
   for_each = var.environments
 
   name = "www.${each.value.domain_name}"
@@ -68,11 +68,11 @@ resource "aws_route53_record" "www-web-a-record" {
   alias {
     evaluate_target_health = false
     name = "s3-website-eu-west-1.amazonaws.com"
-    zone_id = aws_s3_bucket.www-web-bucket[each.key].hosted_zone_id
+    zone_id = aws_s3_bucket.www_web_bucket[each.key].hosted_zone_id
   }
 }
 
-resource "aws_route53_record" "mail-mx-record" {
+resource "aws_route53_record" "mail_mx_record" {
   name = var.root_domain_name
   type = "MX"
   zone_id = aws_route53_zone.primary.zone_id
@@ -85,7 +85,7 @@ resource "aws_route53_record" "mail-mx-record" {
   ttl = 300
 }
 
-resource "aws_route53_record" "mail-domain-verification-record" {
+resource "aws_route53_record" "mail_domain_verification_record" {
   name = var.root_domain_name
   type = "TXT"
   zone_id = aws_route53_zone.primary.zone_id
@@ -97,7 +97,7 @@ resource "aws_route53_record" "mail-domain-verification-record" {
   ttl = 300
 }
 
-resource "aws_route53_record" "mail-dkim-record" {
+resource "aws_route53_record" "mail_dkim_record" {
   name = "zmail._domainkey.${var.root_domain_name}"
   type = "TXT"
   zone_id = aws_route53_zone.primary.zone_id
